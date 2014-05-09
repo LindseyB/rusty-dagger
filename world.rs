@@ -30,7 +30,7 @@ impl World {
     }
 
     /* create the player */
-    let mut player = Creature::new(10, 10);
+    let mut player = Creature::new(10, 10, "@", 20, 5, "rusty dagger");
 
     World { max_x: max_x, max_y: max_y, map: map, player: player }
   }
@@ -45,12 +45,20 @@ impl World {
 
     /* move and show the player */
     move(self.player.y, self.player.x);
-    printw("@");
+    printw(self.player.pic);
+
+    /* draw the hud */
+    move(0,0);
+    printw("hp    : " + self.player.hp.to_str());
+    move(1,0);
+    printw("weapon: " + self.player.weapon);
+    move(2,0);
+    printw("damage: " + self.player.damage.to_str());
   }
 
   pub fn move_player(&mut self, x: i32, y: i32) {
     if x >= 0 && x < self.max_x && y >= 0 && y < self.max_y {
       self.player.move(x,y);
-    } 
+    }
   }
 }
