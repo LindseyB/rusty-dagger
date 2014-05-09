@@ -1,3 +1,5 @@
+/* Creature Module */
+
 pub struct Creature {
   pub x: i32,
   pub y: i32
