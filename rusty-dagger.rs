@@ -4,10 +4,13 @@ extern crate ncurses;
 
 use ncurses::*;
 
+static KEY_ESC : i32 = 27;
+
 fn main()
 {
   /* Start ncurses. */
   initscr();
+  keypad(stdscr, true);
 
   /* Print to the back buffer. */
   printw("rusty dagger");
@@ -34,9 +37,18 @@ fn main()
   move(10,10);
   printw("@");
 
-  /* Wait for a key press. */
-  getch();
+  loop {
+    /* Wait for a key press. */
+    let ch = getch();
 
-  /* Terminate ncurses. */
+    /* exit if esc hit */
+    if ch == KEY_ESC {
+      endwin();
+      break;
+    }
+
+    printw(ch.to_str());
+  }
+
   endwin();
 }
