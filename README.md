@@ -1,13 +1,15 @@
 rusty dagger
 ------------
+Rogue-link written in rust using [ncurses](https://github.com/jeaye/ncurses-rs).
 
-## Building
+
+### Building
 
 ```
 make
 ```
 
-## Playing
+### Playing
 
 ```
 ./rusty-dagger
