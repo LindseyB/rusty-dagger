@@ -22,12 +22,12 @@ fn main()
 
   /* fill up our map and screen with dots */
   for i in range(0, max_y) {
-    let mut map_str : ~str= "".to_owned();
+    let mut map_str = StrBuf::from_str("");
     for j in range(0, max_x) {
-      map_str = map_str + ".";
-      move(i,j);
-      printw(".");
+      map_str.push_char('.');
     }
+    move(i,0);
+    printw(map_str.to_str());
     map.push(map_str);
   }
 
