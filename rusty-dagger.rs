@@ -1,13 +1,3 @@
-/*
-    Copyright © 2013 Free Software Foundation, Inc
-    See licensing in LICENSE file
-
-    File: examples/ex_1.rs
-    Author: Jesse 'Jeaye' Wilkerson
-    Description:
-      Simple "Hello, world" example.
-*/
-
 #![feature(globs)]
 
 extern crate ncurses;
@@ -20,7 +10,7 @@ fn main()
   initscr();
 
   /* Print to the back buffer. */
-  printw("Hello, world!");
+  printw("rusty dagger");
 
   /* Update the screen. */
   refresh();
