@@ -30,9 +30,15 @@ fn main()
       Creature { x: x, y: y }
     }
 
-    fn move(&mut self, x: i32, y: i32) {
-      self.x = x;
-      self.y = y;
+    /* TODO: learn how to just do this from the vars */
+    fn move(&mut self, x: i32, y: i32, max_x: i32, max_y: i32) {
+      if x >= 0 && x < max_x {
+        self.x = x;
+      }
+
+      if y >= 0 && y < max_y {
+        self.y = y;
+      }
     }
   }
 
@@ -75,9 +81,20 @@ fn main()
       break;
     }
 
-    /* right arrow hit */
     if ch == KEY_RIGHT {
-      player.move(player.x+1, player.y)
+      player.move(player.x+1, player.y, max_x, max_y);
+    }
+
+    if ch == KEY_LEFT {
+      player.move(player.x-1, player.y, max_x, max_y);
+    }
+
+    if ch == KEY_UP {
+      player.move(player.x, player.y-1, max_x, max_y);
+    }
+
+    if ch == KEY_DOWN {
+      player.move(player.x, player.y+1, max_x, max_y);
     }
 
     refresh();
