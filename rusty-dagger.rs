@@ -18,7 +18,39 @@ fn main()
   let mut max_x = 0;
   let mut max_y = 0;
   getmaxyx(stdscr, &mut max_y, &mut max_x);
-  let mut map = vec![];
+
+  struct World {
+    max_x: i32,
+    max_y: i32,
+    map: std::vec::Vec<std::strbuf::StrBuf>
+  };
+
+  impl World {
+    fn new(max_x: i32, max_y: i32) -> World {
+      let mut map = vec![];
+      /* fill up our map and screen with dots */
+      for i in range(0, max_y) {
+        let mut map_str = StrBuf::from_str("");
+        for j in range(0, max_x) {
+          map_str.push_char('.');
+        }
+        move(i,0);
+        printw(map_str.to_str());
+        map.push(map_str);
+      }
+
+      World { max_x: max_x, max_y: max_y, map: map }
+    }
+
+    fn draw(&self) {
+      /* draw the map */
+      for i in range(0, self.max_y) {
+        move(i,0);
+        /* TODO: index to the correct position in the array */
+        printw(self.map.get(0).to_str());
+      }
+    }
+  };
 
   struct Creature {
     x: i32,
@@ -42,19 +74,12 @@ fn main()
     }
   }
 
+  /* create the world */
+  let mut world = World::new(max_x, max_y);
+
   /* create the player */
   let mut player = Creature::new(10,10);
 
-  /* fill up our map and screen with dots */
-  for i in range(0, max_y) {
-    let mut map_str = StrBuf::from_str("");
-    for j in range(0, max_x) {
-      map_str.push_char('.');
-    }
-    move(i,0);
-    printw(map_str.to_str());
-    map.push(map_str);
-  }
 
   move(player.y,player.x);
   printw("@");
@@ -63,13 +88,7 @@ fn main()
   loop {
     /* Wait for a key press. */
     let ch = getch();
-
-    /* draw the map */
-    for i in range(0, max_y) {
-      move(i,0);
-      /* TODO: index to the correct position in the array */
-      printw(map.get(0).to_str());
-    }
+    world.draw();
 
     /* move and show the player */
     move(player.y, player.x);
