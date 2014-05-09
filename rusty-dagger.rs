@@ -24,12 +24,10 @@ fn main()
 
   /* create the world */
   let mut world = World::new(max_x, max_y);
-
   /* main game loop */
   loop {
-    /* Wait for a key press. */
-    let ch = getch();
     world.draw();
+    let ch = getch(); /* get keypress */
 
     /* exit if esc hit */
     if ch == KEY_ESC {
