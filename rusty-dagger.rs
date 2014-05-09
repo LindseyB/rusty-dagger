@@ -1,8 +1,10 @@
 #![feature(globs)]
 
 extern crate ncurses;
+
 use ncurses::*;
 use world::*;
+
 mod world;
 
 static KEY_ESC : i32 = 27;

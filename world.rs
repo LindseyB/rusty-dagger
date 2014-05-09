@@ -1,26 +1,12 @@
+
 extern crate std;
 extern crate ncurses;
 
 use ncurses::*;
+use world::creature::*;
 
-struct Creature {
-  pub x: i32,
-  pub y: i32
-}
+mod creature;
 
-impl Creature {
-  pub fn new(x: i32, y: i32) -> Creature {
-    Creature { x: x, y: y }
-  }
-
-  /* TODO: learn how to just do this from the vars */
-  pub fn move(&mut self, x: i32, y: i32) {
-    self.x = x;
-    self.y = y;
-  }
-}
-
-/* TODO: move to own file */
 pub struct World {
   pub max_x: i32,
   pub max_y: i32,
