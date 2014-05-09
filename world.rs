@@ -55,11 +55,13 @@ impl World {
 
     /* draw the hud */
     move(0,0);
-    printw("hp    : " + self.player.hp.to_str());
+    printw(format!("hp    : {:15d} |", self.player.hp));
     move(1,0);
-    printw("weapon: " + self.player.weapon);
+    printw(format!("weapon: {:15s} |", self.player.weapon));
     move(2,0);
-    printw("damage: " + self.player.damage.to_str());
+    printw(format!("damage: {:15d} |", self.player.damage));
+    move(3,0);
+    printw("-------------------------");
   }
 
   pub fn move_player(&mut self, x: i32, y: i32) {
