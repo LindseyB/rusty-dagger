@@ -12,9 +12,6 @@ fn main()
   initscr();
   keypad(stdscr, true);
 
-  /* Print to the back buffer. */
-  printw("rusty dagger");
-
   /* Update the screen. */
   refresh();
 
@@ -22,6 +19,25 @@ fn main()
   let mut max_y = 0;
   getmaxyx(stdscr, &mut max_y, &mut max_x);
   let mut map = vec![];
+
+  struct Creature {
+    x: i32,
+    y: i32
+  };
+
+  impl Creature {
+    fn new(x: i32, y: i32) -> Creature {
+      Creature { x: x, y: y }
+    }
+
+    fn move(&mut self, x: i32, y: i32) {
+      self.x = x;
+      self.y = y;
+    }
+  }
+
+  /* create the player */
+  let mut player = Creature::new(10,10);
 
   /* fill up our map and screen with dots */
   for i in range(0, max_y) {
@@ -34,12 +50,24 @@ fn main()
     map.push(map_str);
   }
 
-  move(10,10);
+  move(player.y,player.x);
   printw("@");
 
+  /* main game loop */
   loop {
     /* Wait for a key press. */
     let ch = getch();
+
+    /* draw the map */
+    for i in range(0, max_y) {
+      move(i,0);
+      /* TODO: index to the correct position in the array */
+      printw(map.get(0).to_str());
+    }
+
+    /* move and show the player */
+    move(player.y, player.x);
+    printw("@");
 
     /* exit if esc hit */
     if ch == KEY_ESC {
@@ -47,8 +75,11 @@ fn main()
       break;
     }
 
-    printw(ch.to_str());
-  }
+    /* right arrow hit */
+    if ch == KEY_RIGHT {
+      player.move(player.x+1, player.y)
+    }
 
-  endwin();
+    refresh();
+  }
 }
