@@ -1,9 +1,11 @@
 #![feature(globs)]
 
 extern crate ncurses;
+extern crate rand;
 
 use ncurses::*;
 use world::*;
+use rand::{task_rng, Rng};
 
 mod world;
 

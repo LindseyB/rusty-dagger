@@ -2,7 +2,9 @@
 
 extern crate std;
 extern crate ncurses;
+extern crate rand;
 
+use rand::{task_rng, Rng};
 use ncurses::*;
 use world::creature::*;
 
@@ -28,7 +30,12 @@ impl World {
     for i in range(0, height) {
       let mut map_str = StrBuf::from_str("");
       for j in range(0, width) {
-        map_str.push_char('.');
+        let num = task_rng().gen_range(0,10);
+        if num == 0 {
+          map_str.push_char('#');
+        } else {
+          map_str.push_char('.');
+        }
       }
       move(i,0);
       printw(map_str.to_str());
