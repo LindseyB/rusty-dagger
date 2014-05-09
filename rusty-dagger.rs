@@ -19,10 +19,12 @@ fn main()
   let mut max_y = 0;
   getmaxyx(stdscr, &mut max_y, &mut max_x);
 
+  /* TODO: move to own file */
   struct World {
     max_x: i32,
     max_y: i32,
-    map: std::vec::Vec<std::strbuf::StrBuf>
+    map: std::vec::Vec<std::strbuf::StrBuf>,
+    player: Creature
   };
 
   impl World {
@@ -39,7 +41,10 @@ fn main()
         map.push(map_str);
       }
 
-      World { max_x: max_x, max_y: max_y, map: map }
+      /* create the player */
+      let mut player = Creature::new(10, 10);
+
+      World { max_x: max_x, max_y: max_y, map: map, player: player }
     }
 
     fn draw(&self) {
@@ -49,9 +54,20 @@ fn main()
         /* TODO: index to the correct position in the array */
         printw(self.map.get(0).to_str());
       }
+
+      /* move and show the player */
+      move(self.player.y, self.player.x);
+      printw("@");
+    }
+
+    fn move_player(&mut self, x: i32, y: i32) {
+      if x >= 0 && x < self.max_x && y >= 0 && y < self.max_y {
+        self.player.move(x,y);
+      } 
     }
   };
 
+  /* TODO: move to separate file */
   struct Creature {
     x: i32,
     y: i32
@@ -63,36 +79,20 @@ fn main()
     }
 
     /* TODO: learn how to just do this from the vars */
-    fn move(&mut self, x: i32, y: i32, max_x: i32, max_y: i32) {
-      if x >= 0 && x < max_x {
-        self.x = x;
-      }
-
-      if y >= 0 && y < max_y {
-        self.y = y;
-      }
+    fn move(&mut self, x: i32, y: i32) {
+      self.x = x;
+      self.y = y;
     }
   }
 
   /* create the world */
   let mut world = World::new(max_x, max_y);
 
-  /* create the player */
-  let mut player = Creature::new(10,10);
-
-
-  move(player.y,player.x);
-  printw("@");
-
   /* main game loop */
   loop {
     /* Wait for a key press. */
     let ch = getch();
     world.draw();
-
-    /* move and show the player */
-    move(player.y, player.x);
-    printw("@");
 
     /* exit if esc hit */
     if ch == KEY_ESC {
@@ -101,19 +101,19 @@ fn main()
     }
 
     if ch == KEY_RIGHT {
-      player.move(player.x+1, player.y, max_x, max_y);
+      world.move_player(world.player.x+1, world.player.y);
     }
 
     if ch == KEY_LEFT {
-      player.move(player.x-1, player.y, max_x, max_y);
+      world.move_player(world.player.x-1, world.player.y);
     }
 
     if ch == KEY_UP {
-      player.move(player.x, player.y-1, max_x, max_y);
+      world.move_player(world.player.x, world.player.y-1);
     }
 
     if ch == KEY_DOWN {
-      player.move(player.x, player.y+1, max_x, max_y);
+      world.move_player(world.player.x, world.player.y+1);
     }
 
     refresh();
