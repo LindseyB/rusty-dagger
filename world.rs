@@ -46,7 +46,6 @@ impl World {
     /* draw the map */
     for i in range(0, self.map.len()) {
       move(self.map_start_y + i as i32, self.map_start_x);
-      /* TODO: index to the correct position in the array */
       printw(self.map.get(i as uint).to_str());
     }
 
