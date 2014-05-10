@@ -87,8 +87,12 @@ impl World {
     /* move and show the enemies */
     attron(COLOR_PAIR(3));
     for enemy in self.enemies.iter() {
-      move(enemy.abs_y, enemy.abs_x);
-      printw(enemy.pic);
+      if enemy.hp <= 0 {
+        // don't draw
+      } else {
+        move(enemy.abs_y, enemy.abs_x);
+        printw(enemy.pic);
+      }
     }
 
     /* reset the colors */
@@ -105,17 +109,29 @@ impl World {
       }
 
       /* attacking? */
-      for enemy in self.enemies.iter() {
+      for enemy in self.enemies.mut_iter() {
         if new_x == enemy.x && new_y == enemy.y {
           /* attack with 100% success-rate */
-          // TODO: figure out how the hell to make enemy mutable
-          //enemy.hp -= self.player.damage;
-          self.msg = format!("You attack with {:s} for {:d} damage.", self.player.weapon, self.player.damage);
+          enemy.hp -= self.player.damage;
+          if enemy.hp <= 0 {
+            self.msg = "You murderer!".to_owned();
+          } else {
+            self.msg = format!("You attack with {:s} for {:d} damage.", self.player.weapon, self.player.damage);
+          }
           return;
         }
       }
 
       self.player.move(move_x,move_y);
+    }
+  }
+
+  pub fn update(&self) {
+    for i in range(0, self.enemies.len()) {
+      if self.enemies.get(i).hp <= 0 {
+        // TODO: figure out how to remove
+        // self.enemies.remove(i);
+      }
     }
   }
 }
