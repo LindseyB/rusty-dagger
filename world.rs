@@ -17,7 +17,8 @@ pub struct World {
   pub map_start_y : i32,
   pub map         : std::vec::Vec<std::strbuf::StrBuf>,
   pub player      : Creature,
-  pub enemies     : std::vec::Vec<Creature>
+  pub enemies     : std::vec::Vec<Creature>,
+  pub msg         : ~str
 }
 
 impl World {
@@ -49,7 +50,10 @@ impl World {
     /* create the player */
     let mut player = Creature::new(0, 0, map_start_x, map_start_y, "@", 20, 5, "rusty dagger");
 
-    World { max_x: max_x, max_y: max_y, map_start_x: map_start_x, map_start_y: map_start_y, map: map, player: player, enemies: enemies }
+    /* create a single enemy and add it to the list */
+    enemies.push(Creature::new(5, 5, map_start_x+5, map_start_y+5, "$", 10, 1, ""));
+
+    World { max_x: max_x, max_y: max_y, map_start_x: map_start_x, map_start_y: map_start_y, map: map, player: player, enemies: enemies, msg: "".to_owned() }
   }
 
   pub fn draw(&self) {
@@ -70,10 +74,24 @@ impl World {
     move(3,0);
     printw("-------------------------");
 
+    /* draw the messages */
+    move(self.map_start_y + (self.map.len() as i32) + 3, self.map_start_x);
+    printw(self.msg);
+
+
     /* move and show the player */
     move(self.player.abs_y, self.player.abs_x);
     attron(COLOR_PAIR(2));
     printw(self.player.pic);
+
+    /* move and show the enemies */
+    attron(COLOR_PAIR(3));
+    for enemy in self.enemies.iter() {
+      move(enemy.abs_y, enemy.abs_x);
+      printw(enemy.pic);
+    }
+
+    /* reset the colors */
     attron(COLOR_PAIR(1));
   }
 
@@ -82,8 +100,19 @@ impl World {
     let new_y = self.player.y + move_y;
 
     if new_x >= 0 && new_x < (self.map.get(0).len() as i32) && new_y >= 0 && new_y < (self.map.len() as i32) {
-      if self.map.get(new_y as uint).to_str().char_at(new_x as uint) == '#' {
+      if self.map.get(new_y as uint).to_str().char_at(new_x as uint) != '.' {
         return;
+      }
+
+      /* attacking? */
+      for enemy in self.enemies.iter() {
+        if new_x == enemy.x && new_y == enemy.y {
+          /* attack with 100% success-rate */
+          // TODO: figure out how the hell to make enemy mutable
+          //enemy.hp -= self.player.damage;
+          self.msg = format!("You attack with {:s} for {:d} damage.", self.player.weapon, self.player.damage);
+          return;
+        }
       }
 
       self.player.move(move_x,move_y);
