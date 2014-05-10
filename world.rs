@@ -73,6 +73,10 @@ impl World {
 
   pub fn move_player(&mut self, x: i32, y: i32) {
     if x >= self.map_start_x && x < (self.map_start_x + self.map.get(0).len() as i32) && y >= self.map_start_y && y < (self.map_start_y + self.map.len() as i32) {
+      if self.map.get((y-self.map_start_y) as uint).to_str().char_at((x - self.map_start_x) as uint) == '#' {
+        return;
+      }
+
       self.player.move(x,y);
     }
   }
