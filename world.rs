@@ -11,21 +11,25 @@ use world::creature::*;
 mod creature;
 
 pub struct World {
-  pub max_x: i32,
-  pub max_y: i32,
-  pub map_start_x: i32,
-  pub map_start_y: i32,
-  pub map: std::vec::Vec<std::strbuf::StrBuf>,
-  pub player: Creature
+  pub max_x       : i32,
+  pub max_y       : i32,
+  pub map_start_x : i32,
+  pub map_start_y : i32,
+  pub map         : std::vec::Vec<std::strbuf::StrBuf>,
+  pub player      : Creature,
+  pub enemies     : std::vec::Vec<Creature>
 }
 
 impl World {
   pub fn new(max_x: i32, max_y: i32) -> World {
     let mut map = vec![];
+    let mut enemies = vec![];
     /* TODO: generate and fill map based on window size */
-    /* fill up our map with dots */
+    /* fill up our map with dots and walls */
     let width: i32 = 20;
     let height: i32 = 10;
+    let map_start_x: i32 = 10;
+    let map_start_y: i32 = 10;
 
     for i in range(0, height) {
       let mut map_str = StrBuf::from_str("");
@@ -43,9 +47,9 @@ impl World {
     }
 
     /* create the player */
-    let mut player = Creature::new(10, 10, "@", 20, 5, "rusty dagger");
+    let mut player = Creature::new(0, 0, map_start_x, map_start_y, "@", 20, 5, "rusty dagger");
 
-    World { max_x: max_x, max_y: max_y, map_start_x: 10, map_start_y: 10, map: map, player: player }
+    World { max_x: max_x, max_y: max_y, map_start_x: map_start_x, map_start_y: map_start_y, map: map, player: player, enemies: enemies }
   }
 
   pub fn draw(&self) {
@@ -67,19 +71,22 @@ impl World {
     printw("-------------------------");
 
     /* move and show the player */
-    move(self.player.y, self.player.x);
+    move(self.player.abs_y, self.player.abs_x);
     attron(COLOR_PAIR(2));
     printw(self.player.pic);
     attron(COLOR_PAIR(1));
   }
 
-  pub fn move_player(&mut self, x: i32, y: i32) {
-    if x >= self.map_start_x && x < (self.map_start_x + self.map.get(0).len() as i32) && y >= self.map_start_y && y < (self.map_start_y + self.map.len() as i32) {
-      if self.map.get((y-self.map_start_y) as uint).to_str().char_at((x - self.map_start_x) as uint) == '#' {
+  pub fn move_player(&mut self, move_x: i32, move_y: i32) {
+    let new_x = self.player.x + move_x;
+    let new_y = self.player.y + move_y;
+
+    if new_x >= 0 && new_x < (self.map.get(0).len() as i32) && new_y >= 0 && new_y < (self.map.len() as i32) {
+      if self.map.get(new_y as uint).to_str().char_at(new_x as uint) == '#' {
         return;
       }
 
-      self.player.move(x,y);
+      self.player.move(move_x,move_y);
     }
   }
 }

@@ -44,19 +44,19 @@ fn main()
     }
 
     if ch == KEY_RIGHT {
-      world.move_player(world.player.x+1, world.player.y);
+      world.move_player(1, 0);
     }
 
     if ch == KEY_LEFT {
-      world.move_player(world.player.x-1, world.player.y);
+      world.move_player(-1, 0);
     }
 
     if ch == KEY_UP {
-      world.move_player(world.player.x, world.player.y-1);
+      world.move_player(0, -1);
     }
 
     if ch == KEY_DOWN {
-      world.move_player(world.player.x, world.player.y+1);
+      world.move_player(0, 1);
     }
 
     refresh();
