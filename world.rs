@@ -126,12 +126,13 @@ impl World {
     }
   }
 
-  pub fn update(&self) {
+  pub fn update(&mut self) {
     for i in range(0, self.enemies.len()) {
       if self.enemies.get(i).hp <= 0 {
-        // TODO: figure out how to remove
-        // self.enemies.remove(i);
+        self.enemies.remove(i);
       }
+
+      // TODO: move or attack with enemy
     }
   }
 }

@@ -34,6 +34,7 @@ fn main()
   let mut world = World::new(max_x, max_y);
   /* main game loop */
   loop {
+    world.update();
     world.draw();
     let ch = getch(); /* get keypress */
 
