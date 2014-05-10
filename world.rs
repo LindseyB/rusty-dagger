@@ -56,10 +56,6 @@ impl World {
       printw(self.map.get(i as uint).to_str());
     }
 
-    /* move and show the player */
-    move(self.player.y, self.player.x);
-    printw(self.player.pic);
-
     /* draw the hud */
     move(0,0);
     printw(format!("hp    : {:15d} |", self.player.hp));
@@ -69,6 +65,12 @@ impl World {
     printw(format!("damage: {:15d} |", self.player.damage));
     move(3,0);
     printw("-------------------------");
+
+    /* move and show the player */
+    move(self.player.y, self.player.x);
+    attron(COLOR_PAIR(2));
+    printw(self.player.pic);
+    attron(COLOR_PAIR(1));
   }
 
   pub fn move_player(&mut self, x: i32, y: i32) {
