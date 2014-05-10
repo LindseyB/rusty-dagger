@@ -15,9 +15,9 @@ pub struct World {
   pub max_y       : i32,
   pub map_start_x : i32,
   pub map_start_y : i32,
-  pub map         : std::vec::Vec<std::strbuf::StrBuf>,
+  pub map         : Vec<StrBuf>,
   pub player      : Creature,
-  pub enemies     : std::vec::Vec<Creature>,
+  pub enemies     : Vec<Creature>,
   pub msg         : ~str
 }
 
