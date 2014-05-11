@@ -7,8 +7,10 @@ extern crate rand;
 use rand::{task_rng, Rng};
 use ncurses::*;
 use world::creature::*;
+use world::goal::*;
 
 mod creature;
+mod goal;
 
 pub struct World {
   pub max_x       : i32,
@@ -18,6 +20,7 @@ pub struct World {
   pub map         : Vec<StrBuf>,
   pub player      : Creature,
   pub enemies     : Vec<Creature>,
+  pub goal        : Goal,
   pub msg         : ~str
 }
 
@@ -50,10 +53,14 @@ impl World {
     /* create the player */
     let mut player = Creature::new(0, 0, map_start_x, map_start_y, "@", 20, 5, "rusty dagger");
 
+    /* TODO: add more enemies */
     /* create a single enemy and add it to the list */
     enemies.push(Creature::new(5, 5, map_start_x+5, map_start_y+5, "$", 10, 2, ""));
 
-    World { max_x: max_x, max_y: max_y, map_start_x: map_start_x, map_start_y: map_start_y, map: map, player: player, enemies: enemies, msg: "".to_owned() }
+    /* create the goal */
+    let mut goal = Goal::new(width-1, height-1, map_start_x+width-1, map_start_y+height-1);
+
+    World { max_x: max_x, max_y: max_y, map_start_x: map_start_x, map_start_y: map_start_y, map: map, player: player, enemies: enemies, msg: "".to_owned(), goal: goal }
   }
 
   pub fn draw(&self) {
@@ -92,6 +99,13 @@ impl World {
       printw(enemy.pic);
     }
 
+    if !self.goal.got {
+      /* show the goal */
+      attron(COLOR_PAIR(4));
+      move(self.goal.abs_y, self.goal.abs_x);
+      printw("*");
+    }
+
     /* reset the colors */
     attron(COLOR_PAIR(1));
   }
@@ -122,6 +136,12 @@ impl World {
           }
           return;
         }
+      }
+
+      /* goal get? */
+      if new_x == self.goal.x && new_y == self.goal.y {
+        self.msg = "Goal get!".to_owned();
+        self.goal.got = true;
       }
 
       self.player.move(move_x,move_y);
