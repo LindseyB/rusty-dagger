@@ -130,9 +130,15 @@ impl World {
     for i in range(0, self.enemies.len()) {
       if self.enemies.get(i).hp <= 0 {
         self.enemies.remove(i);
+      } else if (self.enemies.get(i).x == self.player.x && (self.enemies.get(i).y == self.player.y - 1 || self.enemies.get(i).y == self.player.y + 1) ) ||
+      (self.enemies.get(i).y == self.player.y && (self.enemies.get(i).x == self.player.x - 1 || self.enemies.get(i).x == self.player.x + 1)) {
+        /* is player is adjacent attack */
+        self.player.hp -= self.enemies.get(i).damage;
       }
 
-      // TODO: move or attack with enemy
+      /* if player is nearby move */
+
+      /* otherwise move randomly */
     }
   }
 }
