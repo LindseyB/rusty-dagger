@@ -51,7 +51,7 @@ impl World {
     let mut player = Creature::new(0, 0, map_start_x, map_start_y, "@", 20, 5, "rusty dagger");
 
     /* create a single enemy and add it to the list */
-    enemies.push(Creature::new(5, 5, map_start_x+5, map_start_y+5, "$", 10, 1, ""));
+    enemies.push(Creature::new(5, 5, map_start_x+5, map_start_y+5, "$", 10, 2, ""));
 
     World { max_x: max_x, max_y: max_y, map_start_x: map_start_x, map_start_y: map_start_y, map: map, player: player, enemies: enemies, msg: "".to_owned() }
   }
@@ -100,6 +100,11 @@ impl World {
     let new_x = self.player.x + move_x;
     let new_y = self.player.y + move_y;
 
+    /* if player dead do nothing */
+    if self.player.hp <= 0 {
+      return;
+    }
+
     if new_x >= 0 && new_x < (self.map.get(0).len() as i32) && new_y >= 0 && new_y < (self.map.len() as i32) {
       if self.map.get(new_y as uint).to_str().char_at(new_x as uint) != '.' {
         return;
@@ -124,6 +129,11 @@ impl World {
   }
 
   pub fn update(&mut self) {
+    /* if player dead do nothing */
+    if self.player.hp <= 0 {
+      return;
+    }
+
     /* remove dead enemies */
     for i in range(0, self.enemies.len()) {
       if self.enemies.get(i).hp <= 0 {
@@ -136,6 +146,12 @@ impl World {
       (enemy.y == self.player.y && (enemy.x == self.player.x - 1 || enemy.x == self.player.x + 1)) {
         /* is player is adjacent attack */
         self.player.hp -= enemy.damage;
+
+        /* check if played dead */
+        if self.player.hp <= 0 {
+          self.msg = "You die".to_owned();
+          self.player.pic = "^";
+        }
       } else {
         /* make a move */
         let mut new_x = enemy.x;
