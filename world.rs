@@ -114,8 +114,8 @@ impl World {
     let new_x = self.player.x + move_x;
     let new_y = self.player.y + move_y;
 
-    /* if player dead do nothing */
-    if self.player.hp <= 0 {
+    /* if player dead or won do nothing */
+    if self.player.hp <= 0 || self.goal.got {
       return;
     }
 
@@ -140,7 +140,7 @@ impl World {
 
       /* goal get? */
       if new_x == self.goal.x && new_y == self.goal.y {
-        self.msg = "Goal get!".to_owned();
+        self.msg = "Goal get! You win!".to_owned();
         self.goal.got = true;
       }
 
@@ -149,8 +149,8 @@ impl World {
   }
 
   pub fn update(&mut self) {
-    /* if player dead do nothing */
-    if self.player.hp <= 0 {
+    /* if player dead or won do nothing */
+    if self.player.hp <= 0 || self.goal.got {
       return;
     }
 
