@@ -124,35 +124,40 @@ impl World {
   }
 
   pub fn update(&mut self) {
+    /* remove dead enemies */
     for i in range(0, self.enemies.len()) {
       if self.enemies.get(i).hp <= 0 {
         self.enemies.remove(i);
-      } else if (self.enemies.get(i).x == self.player.x && (self.enemies.get(i).y == self.player.y - 1 || self.enemies.get(i).y == self.player.y + 1) ) ||
-      (self.enemies.get(i).y == self.player.y && (self.enemies.get(i).x == self.player.x - 1 || self.enemies.get(i).x == self.player.x + 1)) {
+      }
+    }
+
+    for enemy in self.enemies.mut_iter() {
+      if (enemy.x == self.player.x && (enemy.y == self.player.y - 1 || enemy.y == self.player.y + 1) ) ||
+      (enemy.y == self.player.y && (enemy.x == self.player.x - 1 || enemy.x == self.player.x + 1)) {
         /* is player is adjacent attack */
-        self.player.hp -= self.enemies.get(i).damage;
-      } else if self.enemies.get(i).x >= self.player.x - 3 &&
-      self.enemies.get(i).x <= self.player.x + 3 &&
-      self.enemies.get(i).y >= self.player.y - 3 &&
-      self.enemies.get(i).y <= self.player.y + 3 {
+        self.player.hp -= enemy.damage;
+      } else if enemy.x >= self.player.x - 3 &&
+                enemy.x <= self.player.x + 3 &&
+                enemy.y >= self.player.y - 3 &&
+                enemy.y <= self.player.y + 3 {
         /* if player is nearby move towards player */
       } else {
         /* otherwise move randomly */
         let num = task_rng().gen_range(0,3);
 
-        // if num == 0 {
-        //   /* move up */
-        //   self.enemies.get(i).move(0,-1);
-        // } else if num == 1 {
-        //   /* move down */
-        //   self.enemies.get(i).move(0,1);
-        // } else if num == 2 {
-        //   /* move left */
-        //   self.enemies.get(i).move(-1,0);
-        // } else {
-        //   /* move right */
-        //   self.enemies.get(i).move(1,0);
-        // }
+        if num == 0 {
+          /* move up */
+          enemy.move(0,-1);
+        } else if num == 1 {
+          /* move down */
+          enemy.move(0,1);
+        } else if num == 2 {
+          /* move left */
+          enemy.move(-1,0);
+        } else {
+          /* move right */
+          enemy.move(1,0);
+        }
       }
     }
   }
