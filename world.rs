@@ -136,27 +136,58 @@ impl World {
       (enemy.y == self.player.y && (enemy.x == self.player.x - 1 || enemy.x == self.player.x + 1)) {
         /* is player is adjacent attack */
         self.player.hp -= enemy.damage;
-      } else if enemy.x >= self.player.x - 3 &&
-                enemy.x <= self.player.x + 3 &&
-                enemy.y >= self.player.y - 3 &&
-                enemy.y <= self.player.y + 3 {
-        /* if player is nearby move towards player */
       } else {
-        /* otherwise move randomly */
-        let num = task_rng().gen_range(0,3);
+        /* make a move */
+        let mut new_x = enemy.x;
+        let mut new_y = enemy.y;
+        let mut move_x = 0;
+        let mut move_y = 0;
 
-        if num == 0 {
-          /* move up */
-          enemy.move(0,-1);
-        } else if num == 1 {
-          /* move down */
-          enemy.move(0,1);
-        } else if num == 2 {
-          /* move left */
-          enemy.move(-1,0);
+        if enemy.x >= self.player.x - 3 &&
+                  enemy.x <= self.player.x + 3 &&
+                  enemy.y >= self.player.y - 3 &&
+                  enemy.y <= self.player.y + 3 {
+          /* if player is nearby move towards player */
+          if enemy.x >= self.player.x {
+            /* move left */
+            move_x = -1;
+          } else if enemy.x <= self.player.x {
+            /* move right */
+            move_x = 1;
+          } else if enemy.y <= self.player.y {
+            /* move up */
+            move_y = 1;
+          } else {
+            /* move up */
+            move_y = -1;
+          }
         } else {
-          /* move right */
-          enemy.move(1,0);
+          /* otherwise move randomly */
+          let num = task_rng().gen_range(0,4);
+
+          if num == 0 {
+            /* move up */
+            move_y = -1;
+          } else if num == 1 {
+            /* move down */
+            move_y = 1;
+          } else if num == 2 {
+            /* move left */
+            move_x = -1;
+          } else {
+            /* move right */
+            move_x = 1;
+          }
+
+          new_x += move_x;
+          new_y += move_y;
+        }
+
+        /* check if valid move and make it */
+        if new_x >= 0 && new_x < (self.map.get(0).len() as i32) && new_y >= 0 && new_y < (self.map.len() as i32) {
+          if self.map.get(new_y as uint).to_str().char_at(new_x as uint) == '.' {
+            enemy.move(move_x,move_y);
+          }
         }
       }
     }
