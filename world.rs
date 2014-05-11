@@ -84,15 +84,12 @@ impl World {
     attron(COLOR_PAIR(2));
     printw(self.player.pic);
 
-    /* move and show the enemies */
+    /* TODO: only show enemies if in player draw distance */
+    /* show the enemies */
     attron(COLOR_PAIR(3));
     for enemy in self.enemies.iter() {
-      if enemy.hp <= 0 {
-        // don't draw
-      } else {
-        move(enemy.abs_y, enemy.abs_x);
-        printw(enemy.pic);
-      }
+      move(enemy.abs_y, enemy.abs_x);
+      printw(enemy.pic);
     }
 
     /* reset the colors */
@@ -134,11 +131,29 @@ impl World {
       (self.enemies.get(i).y == self.player.y && (self.enemies.get(i).x == self.player.x - 1 || self.enemies.get(i).x == self.player.x + 1)) {
         /* is player is adjacent attack */
         self.player.hp -= self.enemies.get(i).damage;
+      } else if self.enemies.get(i).x >= self.player.x - 3 &&
+      self.enemies.get(i).x <= self.player.x + 3 &&
+      self.enemies.get(i).y >= self.player.y - 3 &&
+      self.enemies.get(i).y <= self.player.y + 3 {
+        /* if player is nearby move towards player */
+      } else {
+        /* otherwise move randomly */
+        let num = task_rng().gen_range(0,3);
+
+        // if num == 0 {
+        //   /* move up */
+        //   self.enemies.get(i).move(0,-1);
+        // } else if num == 1 {
+        //   /* move down */
+        //   self.enemies.get(i).move(0,1);
+        // } else if num == 2 {
+        //   /* move left */
+        //   self.enemies.get(i).move(-1,0);
+        // } else {
+        //   /* move right */
+        //   self.enemies.get(i).move(1,0);
+        // }
       }
-
-      /* if player is nearby move */
-
-      /* otherwise move randomly */
     }
   }
 }
