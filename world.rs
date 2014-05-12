@@ -61,8 +61,6 @@ impl World {
 
     let mut player = Creature::new(x, y, map_start_x+x, map_start_y+y, "@", 20, 5, "rusty dagger");
 
-    /* TODO: add more enemies */
-
     x = task_rng().gen_range(0, width);
     y = task_rng().gen_range(0, height);
 
@@ -74,6 +72,19 @@ impl World {
     /* create a single enemy and snake and add it to the list */
     enemies.push(Creature::new(x, y, map_start_x+x, map_start_y+y, "$", 10, 2, "snake"));
 
+    /* create some rats and add it to the enemy list */
+    let mut count = task_rng().gen_range(1,3);
+
+    for i in range(0, count) {
+      x = task_rng().gen_range(0, width);
+      y = task_rng().gen_range(0, height);
+
+      while (player.x == x && player.y == y) && map.get(y as uint).to_str().char_at(x as uint) != '.' {
+          x = task_rng().gen_range(0, width);
+          y = task_rng().gen_range(0, height);
+      }
+      enemies.push(Creature::new(x, y, map_start_x+x, map_start_y+y, "<", 5, 1, "rat"));
+    }
 
     /* create the goal */
     let mut goal = Goal::new(width-1, height-1, map_start_x+width-1, map_start_y+height-1);
