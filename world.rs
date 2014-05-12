@@ -73,7 +73,7 @@ impl World {
     enemies.push(Creature::new(x, y, map_start_x+x, map_start_y+y, "$", 10, 2, "snake"));
 
     /* create some rats and add it to the enemy list */
-    let mut count = task_rng().gen_range(1,3);
+/*    let mut count = task_rng().gen_range(1,3);
 
     for i in range(0, count) {
       x = task_rng().gen_range(0, width);
@@ -84,7 +84,7 @@ impl World {
           y = task_rng().gen_range(0, height);
       }
       enemies.push(Creature::new(x, y, map_start_x+x, map_start_y+y, "<", 5, 1, "rat"));
-    }
+    }*/
 
     /* create the goal */
     let mut goal = Goal::new(width-1, height-1, map_start_x+width-1, map_start_y+height-1);
@@ -208,10 +208,10 @@ impl World {
         let mut move_x = 0;
         let mut move_y = 0;
 
-        if enemy.x >= self.player.x - 3 &&
-                  enemy.x <= self.player.x + 3 &&
-                  enemy.y >= self.player.y - 3 &&
-                  enemy.y <= self.player.y + 3 {
+        if enemy.x >= self.player.x - 2 &&
+                  enemy.x <= self.player.x + 2 &&
+                  enemy.y >= self.player.y - 2 &&
+                  enemy.y <= self.player.y + 2 {
           /* if player is nearby move towards player */
           if enemy.x >= self.player.x {
             /* move left */
@@ -243,10 +243,10 @@ impl World {
             /* move right */
             move_x = 1;
           }
-
-          new_x += move_x;
-          new_y += move_y;
         }
+
+        new_x += move_x;
+        new_y += move_y;
 
         /* check if valid move and make it */
         if new_x >= 0 && new_x < (self.map.get(0).len() as i32) && new_y >= 0 && new_y < (self.map.len() as i32) {
