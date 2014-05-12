@@ -51,11 +51,29 @@ impl World {
     }
 
     /* create the player */
-    let mut player = Creature::new(0, 0, map_start_x, map_start_y, "@", 20, 5, "rusty dagger");
+    let mut x = task_rng().gen_range(0, width);
+    let mut y = task_rng().gen_range(0, height);
+
+    while map.get(y as uint).to_str().char_at(x as uint) != '.' {
+        x = task_rng().gen_range(0, width);
+        y = task_rng().gen_range(0, height);
+    }
+
+    let mut player = Creature::new(x, y, map_start_x+x, map_start_y+y, "@", 20, 5, "rusty dagger");
 
     /* TODO: add more enemies */
-    /* create a single enemy and add it to the list */
-    enemies.push(Creature::new(5, 5, map_start_x+5, map_start_y+5, "$", 10, 2, "snake"));
+
+    x = task_rng().gen_range(0, width);
+    y = task_rng().gen_range(0, height);
+
+    while (player.x == x && player.y == y) && map.get(y as uint).to_str().char_at(x as uint) != '.' {
+        x = task_rng().gen_range(0, width);
+        y = task_rng().gen_range(0, height);
+    }
+
+    /* create a single enemy and snake and add it to the list */
+    enemies.push(Creature::new(x, y, map_start_x+x, map_start_y+y, "$", 10, 2, "snake"));
+
 
     /* create the goal */
     let mut goal = Goal::new(width-1, height-1, map_start_x+width-1, map_start_y+height-1);
