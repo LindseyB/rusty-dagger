@@ -55,7 +55,7 @@ impl World {
 
     /* TODO: add more enemies */
     /* create a single enemy and add it to the list */
-    enemies.push(Creature::new(5, 5, map_start_x+5, map_start_y+5, "$", 10, 2, ""));
+    enemies.push(Creature::new(5, 5, map_start_x+5, map_start_y+5, "$", 10, 2, "snake"));
 
     /* create the goal */
     let mut goal = Goal::new(width-1, height-1, map_start_x+width-1, map_start_y+height-1);
@@ -130,9 +130,9 @@ impl World {
           /* attack with 100% success-rate */
           enemy.hp -= self.player.damage;
           if enemy.hp <= 0 {
-            self.msg = "You murderer!".to_owned();
+            self.msg = format!("You kill the {:s}", enemy.weapon);
           } else {
-            self.msg = format!("You attack with {:s} for {:d} damage.", self.player.weapon, self.player.damage);
+            self.msg = format!("You attack the {:s} with {:s} for {:d} damage.", enemy.weapon, self.player.weapon, self.player.damage);
           }
           return;
         }
@@ -140,7 +140,7 @@ impl World {
 
       /* goal get? */
       if new_x == self.goal.x && new_y == self.goal.y {
-        self.msg = "Goal get! You win!".to_owned();
+        self.msg = "You win!".to_owned();
         self.goal.got = true;
       }
 

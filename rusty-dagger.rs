@@ -47,17 +47,11 @@ fn main()
 
     if ch == KEY_RIGHT {
       world.move_player(1, 0);
-    }
-
-    if ch == KEY_LEFT {
+    } else if ch == KEY_LEFT {
       world.move_player(-1, 0);
-    }
-
-    if ch == KEY_UP {
+    } else if ch == KEY_UP {
       world.move_player(0, -1);
-    }
-
-    if ch == KEY_DOWN {
+    } else if ch == KEY_DOWN {
       world.move_player(0, 1);
     }
 
