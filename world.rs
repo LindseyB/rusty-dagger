@@ -51,6 +51,7 @@ impl World {
     }
 
     /* create the player */
+    /* TODO: remove duplication with random placement code */
     let mut x = task_rng().gen_range(0, width);
     let mut y = task_rng().gen_range(0, height);
 
