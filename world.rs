@@ -195,6 +195,7 @@ impl World {
     for i in range(0, self.enemies.len()) {
       if self.enemies.get(i).hp <= 0 {
         self.enemies.remove(i);
+        break;
       }
     }
 
